@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import InterviewerList from '../InterviewerList/InterviewerList';
 import Button from '../Button';
 
-export default function Form(props) {
-  const [name, setName] = useState(props.name || "");
-  const [interviewer, setInterviewer] = useState(props.interviewer || null);
+export default function Form({name: propName, interviewer: propInterviewer, interviewers, onCancel, onSave}) {
+  const [name, setName] = useState(propName || "");
+  const [interviewer, setInterviewer] = useState(propInterviewer || null);
 
   const reset = () => {
     setName("");
@@ -14,12 +14,14 @@ export default function Form(props) {
 
   const cancel = () => {
     reset();
-    props.onCancel();
+    onCancel();
   }
 
   const save = () => {
-    reset();
-    props.onSave(name, interviewer);
+    if (interviewer) {
+      const interviewerID =  typeof interviewer === "number" ? interviewer: interviewer.id;
+      onSave(name, interviewerID)
+    }
   }
 
   return (
@@ -36,8 +38,8 @@ export default function Form(props) {
           />
         </form>
         <InterviewerList 
-          interviewers={props.interviewers} 
-          value={interviewer} 
+          interviewers={interviewers} 
+          interviewer={interviewer} 
           onChange={setInterviewer} 
         />
       </section>
