@@ -3,26 +3,33 @@ import React, { useState } from 'react';
 import InterviewerList from '../InterviewerList/InterviewerList';
 import Button from '../Button';
 
-export default function Form({name: propName, interviewer: propInterviewer, interviewers, onCancel, onSave}) {
-  const [name, setName] = useState(propName || "");
+export default function Form({
+  name: propName,
+  interviewer: propInterviewer,
+  interviewers,
+  onCancel,
+  onSave
+}) {
+  const [name, setName] = useState(propName || '');
   const [interviewer, setInterviewer] = useState(propInterviewer || null);
 
   const reset = () => {
-    setName("");
+    setName('');
     setInterviewer(null);
-  }
+  };
 
   const cancel = () => {
     reset();
     onCancel();
-  }
+  };
 
   const save = () => {
     if (interviewer) {
-      const interviewerID =  typeof interviewer === "number" ? interviewer: interviewer.id;
-      onSave(name, interviewerID)
+      const interviewerID =
+        typeof interviewer === 'number' ? interviewer : interviewer.id;
+      onSave(name, interviewerID);
     }
-  }
+  };
 
   return (
     <main className="appointment__card appointment__card--create">
@@ -37,18 +44,22 @@ export default function Form({name: propName, interviewer: propInterviewer, inte
             onChange={e => setName(e.target.value)}
           />
         </form>
-        <InterviewerList 
-          interviewers={interviewers} 
-          interviewer={interviewer} 
-          onChange={setInterviewer} 
+        <InterviewerList
+          interviewers={interviewers}
+          interviewer={interviewer}
+          onChange={setInterviewer}
         />
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <Button danger onClick={cancel}>Cancel</Button>
-          <Button confirm onClick={save}>Save</Button>
+          <Button danger onClick={cancel}>
+            Cancel
+          </Button>
+          <Button confirm onClick={save}>
+            Save
+          </Button>
         </section>
       </section>
     </main>
-  )
-} 
+  );
+}

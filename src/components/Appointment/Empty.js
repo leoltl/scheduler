@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Empty({onAdd}) {
+export default function Empty({ onAdd }) {
   return (
     <main className="appointment__add">
       <img
@@ -10,5 +10,5 @@ export default function Empty({onAdd}) {
         onClick={onAdd}
       />
     </main>
-  )
-} 
+  );
+}
