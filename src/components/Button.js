@@ -1,19 +1,23 @@
-import React from "react";
-import classnames from "classnames";
+/* eslint-disable react/prop-types */
+import React from 'react';
+import classnames from 'classnames';
 
-import "components/Button.scss";
+import 'components/Button.scss';
 
-export default function Button({confirm, danger, disabled, onClick, children}) {
-   const buttonClass = classnames('button', {
-      'button--confirm': confirm, 
-      'button--danger': danger
-   })
-   return (
-      <button 
-         className={buttonClass}
-         disabled={disabled} 
-         onClick={onClick}>
+export default function Button({
+  confirm,
+  danger,
+  disabled,
+  onClick,
+  children
+}) {
+  const buttonClass = classnames('button', {
+    'button--confirm': confirm,
+    'button--danger': danger
+  });
+  return (
+    <button className={buttonClass} disabled={disabled} onClick={onClick}>
       {children}
-      </button>
-   );
+    </button>
+  );
 }
