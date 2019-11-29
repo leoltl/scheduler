@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { getDayByAppointmentID } from '../helpers/selectors';
+import { getAppointmentsForDay } from '../helpers/selectors';
 import axios from "axios";
 
 import 'components/Application.scss';
@@ -7,21 +7,30 @@ import 'components/Application.scss';
 const SET_DAY = "SET_DAY";
 const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 const SET_INTERVIEW = "SET_INTERVIEW";
-const NEW = "NEW";
-const REMOVE = "REMOVE";
+
+const calculateSpots = (myState) => {
+  return myState.days.map(day => day.name)
+          .map(day => getAppointmentsForDay(myState, day))
+          .map(slotsInOneday => 
+            slotsInOneday.reduce((count, slot) => slot.interview ? count : count + 1, 0));
+}
+
+const handleAppointsmentUpdate = (myState, id, interview) => {
+  let { appointments } = myState;
+  appointments[id].interview = interview || null;
+  return appointments
+}
 
 const reducers = {
   SET_APPLICATION_DATA: (prevState, action) => ({ ...prevState, ...action.payload }),
   SET_DAY: (prevState, action) => ({ ...prevState, day: action.payload }),
   SET_INTERVIEW: (prevState, action) => {
-    const { id, appointments, updateType } = action.payload
-    const daysID = Math.floor((id - 1) / 5);
-    const intermediateState = { ...prevState, appointments };
-    // mutates the copied state
-    updateType === NEW && intermediateState.days[daysID].spots--;
-    updateType === REMOVE && intermediateState.days[daysID].spots++;
-    return intermediateState
-    }
+    const { id, interview } = action.payload;
+    let intermediateState = {...prevState, appointments: handleAppointsmentUpdate(prevState, id, interview)}
+    let updatedDays = intermediateState.days
+    calculateSpots(intermediateState).map((count, i) => updatedDays[i].spots = count);
+    return {...intermediateState, days: updatedDays}
+  }
 };
 
 const reducer = (prevState, action) => {
@@ -51,31 +60,39 @@ export default function useApplicationData() {
     })
   }, []);
 
+  useEffect(() => {
+    const sock = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
+    sock.addEventListener('open', () => {
+      sock.send('ping');
+    })
+    sock.addEventListener('message', (msg) => {
+      const { id, interview } = JSON.parse(msg.data);
+      if (id) {
+        dispatch({ type: SET_INTERVIEW, payload: { id, interview }})
+      };
+    })
+
+    return (() => {
+      sock.close();
+    })
+  }, []);
+
   const setDay = day => dispatch({ type: SET_DAY, payload: day });
 
   const bookInterview = (id, interview) => {
-    return axios.put(`/api/appointments/${id}`, {
-              interview
-            }).then((res) => {
-              const appointment = {
-                ...state.appointments[id],
-                interview: { ...interview }
-              };
-              const appointments = {
-                ...state.appointments,
-                [id]: appointment
-              };
-              dispatch({ type: SET_INTERVIEW, payload: { updateType: NEW, appointments, id } })
-              return res;
-            })
+    return axios.put(`/api/appointments/${id}`, { interview })
+              .then((res) => {
+                const resInterview = { ...interview }
+                dispatch({ type: SET_INTERVIEW, payload: { id, interview: resInterview } })
+                return res;
+              })
   };
 
   const cancelInterview = (id) => {
     return axios.delete(`/api/appointments/${id}`)
       .then(() => {
-        const copyOfAppointments = state.appointments
-        copyOfAppointments[id].interview = null;
-        dispatch({ type: SET_INTERVIEW, payload: { updateType: REMOVE, appointments: copyOfAppointments, id } })
+        dispatch({ type: SET_INTERVIEW, payload: { id } })
       })
   };
 
