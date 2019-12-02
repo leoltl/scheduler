@@ -23,7 +23,7 @@ const reducers = {
     ...prevState,
     ...action.payload
   }),
-  // SET_DAY: (prevState, action) => ({ ...prevState, day: action.payload }),
+  SET_DAY: (prevState, action) => ({ ...prevState, day: action.payload }),
   SET_INTERVIEW: (prevState, action) => {
     const { id, interview } = action.payload;
     let intermediateState = {
