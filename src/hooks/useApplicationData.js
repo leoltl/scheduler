@@ -1,53 +1,10 @@
 import { useEffect, useReducer } from 'react';
-import { getAppointmentsForDay } from '../helpers/selectors';
 import axios from 'axios';
+import reducer from '../reducers/application';
 
 const SET_DAY = 'SET_DAY';
 const SET_APPLICATION_DATA = 'SET_APPLICATION_DATA';
 const SET_INTERVIEW = 'SET_INTERVIEW';
-
-const calculateSpots = myState => {
-  return myState.days
-    .map(day => day.name)
-    .map(day => getAppointmentsForDay(myState, day))
-    .map(slotsInOneday =>
-      slotsInOneday.reduce(
-        (count, slot) => (slot.interview ? count : count + 1),
-        0
-      )
-    );
-};
-
-const handleAppointsmentUpdate = (myState, id, interview) => {
-  let appointments = { ...myState.appointments };
-  appointments[id].interview = interview || null;
-  return appointments;
-};
-
-const reducers = {
-  SET_APPLICATION_DATA: (prevState, action) => ({
-    ...prevState,
-    ...action.payload
-  }),
-  SET_DAY: (prevState, action) => ({ ...prevState, day: action.payload }),
-  SET_INTERVIEW: (prevState, action) => {
-    const { id, interview } = action.payload;
-    let intermediateState = {
-      ...prevState,
-      appointments: handleAppointsmentUpdate(prevState, id, interview)
-    };
-    let updatedDays = [...intermediateState.days];
-    calculateSpots(intermediateState).map(
-      (count, i) => (updatedDays[i].spots = count)
-    );
-    return { ...intermediateState, days: updatedDays };
-  }
-};
-
-const reducer = (prevState, action) => {
-  const { type } = action;
-  return reducers[type](prevState, action) || prevState;
-};
 
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, {

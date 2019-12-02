@@ -62,13 +62,13 @@ export default function Appointment({
       {mode === ERROR_SAVE && (
         <Error
           onClose={back}
-          message="Connection Error: Appoinment is not saved."
+          message="Connection Error: Appointment is not saved."
         />
       )}
       {mode === ERROR_DELETE && (
         <Error
           onClose={back}
-          message="Connection Error: Appoinment is not deleted."
+          message="Connection Error: Appointment is not deleted."
         />
       )}
       {mode === CONFIRM && (
