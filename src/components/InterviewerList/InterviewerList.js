@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import InterviewerListItem from '../InterviewerListItem/InterviewerListItem';
 import './InterviewerList.scss';
@@ -28,3 +28,8 @@ export default function InterviewerList({
     </section>
   );
 }
+
+InterviewerList.propTypes = {
+  interviewer: PropTypes.object,
+  onChange: PropTypes.func.isRequired
+};

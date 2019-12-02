@@ -12,6 +12,21 @@ export default function Form({
 }) {
   const [name, setName] = useState(propName || '');
   const [interviewer, setInterviewer] = useState(propInterviewer || null);
+  const [error, setError] = useState('');
+
+  const validate = () => {
+    if (name === '') {
+      setError('Student name cannot be blank');
+      return;
+    }
+
+    if (interviewer) {
+      const interviewerID =
+        typeof interviewer === 'number' ? interviewer : interviewer.id;
+      setError('');
+      onSave(name, interviewerID);
+    }
+  };
 
   const reset = () => {
     setName('');
@@ -21,14 +36,6 @@ export default function Form({
   const cancel = () => {
     reset();
     onCancel();
-  };
-
-  const save = () => {
-    if (interviewer) {
-      const interviewerID =
-        typeof interviewer === 'number' ? interviewer : interviewer.id;
-      onSave(name, interviewerID);
-    }
   };
 
   return (
@@ -42,20 +49,22 @@ export default function Form({
             placeholder="Enter Student Name"
             value={name}
             onChange={e => setName(e.target.value)}
+            data-testid="student-name-input"
+          />
+          <section className="appointment__validation">{error}</section>
+          <InterviewerList
+            interviewers={interviewers}
+            interviewer={interviewer}
+            onChange={setInterviewer}
           />
         </form>
-        <InterviewerList
-          interviewers={interviewers}
-          interviewer={interviewer}
-          onChange={setInterviewer}
-        />
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={cancel}>
             Cancel
           </Button>
-          <Button confirm onClick={save}>
+          <Button confirm onClick={validate}>
             Save
           </Button>
         </section>
