@@ -43,7 +43,7 @@ const reducer = (prevState, action) => {
   if (!reducers[type]) {
     throw new Error('tried to reduce with unsupported action type');
   }
-  return reducers[type](prevState, action);
+  return reducers[type](prevState, action) || prevState;
 };
 
 export default reducer;
