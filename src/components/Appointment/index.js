@@ -56,7 +56,7 @@ export default function Appointment({
     transition(EDIT);
   };
   return (
-    <article className="appointment">
+    <article data-testid="appointment" className="appointment">
       <Header time={time} key={id} />
 
       {mode === ERROR_SAVE && (

@@ -54,10 +54,8 @@ export default function Application() {
         />
       </section>
       <section className="schedule">
-        <section className="schedule">
-          {appointments}
-          <Appointment key="last" time="5pm" />
-        </section>
+        {appointments}
+        <Appointment key="last" time="5pm" />
       </section>
     </main>
   );
