@@ -51,7 +51,7 @@ export default function useApplicationData() {
   const setDay = day => dispatch({ type: SET_DAY, payload: day });
 
   const bookInterview = (id, interview) => {
-    return axios.put(`/api/appointments/${id}`, { interview }).then(
+    return axios.put(`/api/appointments/${id}`, { interview }).then(() =>
       dispatch({
         type: SET_INTERVIEW,
         payload: { id, interview }
@@ -62,7 +62,7 @@ export default function useApplicationData() {
   const cancelInterview = id => {
     return axios
       .delete(`/api/appointments/${id}`)
-      .then(dispatch({ type: SET_INTERVIEW, payload: { id } }));
+      .then(() => dispatch({ type: SET_INTERVIEW, payload: { id } }));
   };
 
   return { state, setDay, bookInterview, cancelInterview };
