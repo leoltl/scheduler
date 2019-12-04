@@ -6,7 +6,7 @@ const calculateSpots = myState => {
     .map(day => getAppointmentsForDay(myState, day))
     .map(slotsInOneday =>
       slotsInOneday.reduce(
-        (count, slot) => (slot.interview ? count : count + 1),
+        (count, slot) => (slot.interview ? count : count + 1), //if interview is not scheduled, interview object is null
         0
       )
     );
@@ -14,6 +14,7 @@ const calculateSpots = myState => {
 
 const handleAppointsmentUpdate = (myState, id, interview) => {
   let appointments = { ...myState.appointments };
+  // no interview is provided at cancel appointment dispatch hence set null, otherwise it is a new booking or an edit existing booking.
   appointments[id].interview = interview || null;
   return appointments;
 };
@@ -31,7 +32,7 @@ const reducers = {
       appointments: handleAppointsmentUpdate(prevState, id, interview)
     };
     let updatedDays = [...intermediateState.days];
-    calculateSpots(intermediateState).map(
+    calculateSpots(intermediateState).forEach(
       (count, i) => (updatedDays[i].spots = count)
     );
     return { ...intermediateState, days: updatedDays };

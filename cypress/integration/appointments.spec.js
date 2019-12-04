@@ -11,7 +11,6 @@ describe('appointments', () => {
     cy.get('[alt="Sylvia Palmer"]')
       .first()
       .click();
-
     cy.contains('Save').click();
     cy.contains('.appointment__card--show', 'Lydia Miller-Jones');
     cy.contains('.appointment__card--show', 'Sylvia Palmer');
@@ -26,7 +25,6 @@ describe('appointments', () => {
     cy.get('[alt="Tori Malcolm"]')
       .first()
       .click();
-
     cy.contains('Save').click();
     cy.contains('.appointment__card--show', 'Archie Cohen');
     cy.contains('.appointment__card--show', 'Tori Malcolm');
@@ -37,7 +35,6 @@ describe('appointments', () => {
       .first()
       .click({ force: true });
     cy.contains('button', 'Confirm').click();
-
     cy.contains('Deleting your appointment...').should('exist');
     cy.contains('Deleting your appointment...').should('not.exist');
     cy.contains('.appointment__card--show', 'Archie Cohen').should('not.exist');
