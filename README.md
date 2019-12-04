@@ -2,6 +2,12 @@
 
 Interview Scheduler - an application that enable student to create, edit and delete interview appointments.
 
+Client App is deployed to netlify - https://scheduler-ltl.netlify.com/, supported with a backend api deployed to https://scheduler-ltl.herokuapp.com/
+
+Database is setup on heroku and data is persisting.
+
+Implemented with WebSocket so user can see real time appointment update as other users are creating, editing and deleted appointments.
+
 ## Final Product
 
 !["Screenshot of URLs details page"](https://github.com/leoltl/scheduler/blob/master/docs/index.png)
